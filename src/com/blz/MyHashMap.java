@@ -1,29 +1,48 @@
 package com.blz;
 
+import java.util.ArrayList;
+
 public class MyHashMap<K,V> {
-    MyLinkedList<K> myLinkedList;
+    private final int numOfBuckets;
+    ArrayList<MyLinkedList<K>> myBucketArray;
 
     public MyHashMap() {
-        this.myLinkedList = new MyLinkedList<>();
+        this.numOfBuckets = 10;
+        this.myBucketArray = new ArrayList<>(numOfBuckets);
+        for (int i = 0; i < numOfBuckets; i++ )
+            this.myBucketArray.add(null);
+    }
+    private int getBucketIndex(K key) {
+        int hashCode = Math.abs(key.hashCode());
+        int index = hashCode % numOfBuckets;
+        return index;
     }
 
     public V get(K key) {
-        MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) this.myLinkedList.search(key);
+        int index = this.getBucketIndex(key);
+        MyLinkedList<K> myList = this.myBucketArray.get(index);
+        if (myList == null)
+            return null;
+        MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) myList.search(key);
         return (myMapNode == null) ? null : myMapNode.getValue();
     }
-
     public void add(K key, V value) {
-        MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) this.myLinkedList.search(key);
+        int index = this.getBucketIndex(key);
+        MyLinkedList<K> myLinkedList = this.myBucketArray.get(index);
+        if (myLinkedList  == null) {
+            myLinkedList  = new MyLinkedList<>();
+            this.myBucketArray.set(index, myLinkedList );
+        }
+        MyMapNode<K, V> myMapNode = (MyMapNode<K, V>) myLinkedList .search(key);
         if (myMapNode == null) {
-            myMapNode = new MyMapNode<K, V>(key, value);
-            this.myLinkedList.append(myMapNode);
+            myMapNode = new MyMapNode<>(key, value);
+            myLinkedList .append(myMapNode);
         } else {
             myMapNode.setValue(value);
         }
     }
-
     @Override
     public String toString() {
-        return "MyHashMap [myLinkedList = " + myLinkedList + "]";
+        return "MyHashMap [numOfBuckets=" + numOfBuckets + ", myBucketArray=" + myBucketArray + "]";
     }
 }
