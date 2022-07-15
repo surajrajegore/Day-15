@@ -25,5 +25,8 @@ public class HashMapTest {
         int frequency = myHashMap.get("paranoid");
         System.out.println(myHashMap);
         System.out.println("Frequency of give word paranoid is " + frequency);
+        myHashMap.removeKey("avoidable");
+        System.out.println("HashMap after deleting avoidable word_________ ");
+        System.out.println(myHashMap);
     }
 }

@@ -30,7 +30,18 @@ public class MyLinkedList<K> {
         }
         return null;
     }
-
+    public INode delete(K key) {
+        INode<K> currentNode = head;
+        INode<K> previous = null;
+        while (currentNode != null && currentNode.getNext() != null) {
+            previous = currentNode;
+            if (currentNode.getKey().equals(key)) {
+                previous.setNext(currentNode.getNext());
+            }
+            currentNode =currentNode.getNext();
+        }
+        return currentNode;
+    }
     @Override
     public String toString() {
         return "MyLinkedList [head=" + head + ", tail=" + tail + "]";
